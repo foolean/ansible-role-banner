@@ -3,50 +3,39 @@
 # SPDX short identifier: BSD-3-Clause
 ---
 
+# We put the entire role in a block so we can create
+# a role specific tag, which saves the caller from
+# having to do so in their playbook.
+- name: Role foolean/banner
+  block:
 
-# Gather facts if we don't already have them.  This step
-# is required in order to be able to specify tags at runtime
-- name: Gather facts
-  become: true
-  ansible.builtin.setup:
-  tags: ['always']
-  when: ansible_facts == {}
+    - name: Configure /etc/issue
+      become: true
+      ansible.builtin.template:
+        src: 'etc/issue.j2'
+        dest: '/etc/issue'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
 
+    - name: Configure /etc/issue.net
+      become: true
+      ansible.builtin.template:
+        src: 'etc/issue.j2'
+        dest: '/etc/issue.net'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
 
-# Configure /etc/issue
-- name: Configure /etc/issue
-  become: true
-  ansible.builtin.template:
-    src: 'etc/issue.j2'
-    dest: '/etc/issue'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
+    - name: Configure /etc/motd
+      become: true
+      ansible.builtin.template:
+        src: 'etc/motd.j2'
+        dest: '/etc/motd'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
 
-
-# Configure /etc/issue
-- name: Configure /etc/issue.net
-  become: true
-  ansible.builtin.template:
-    src: 'etc/issue.j2'
-    dest: '/etc/issue.net'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-
-
-# Configure /etc/motd
-- name: Configure /etc/motd
-  become: true
-  ansible.builtin.template:
-    src: 'etc/motd.j2'
-    dest: '/etc/motd'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-
-
-# Flush any handlers that we might have called
-- name: Flush handlers
-  ansible.builtin.meta:
-    flush_handlers
+  # Tags to be applied to this role (block)
+  tags:
+    - 'role_foolean_banner'
