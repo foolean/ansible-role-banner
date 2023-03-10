@@ -32,6 +32,7 @@ Ansible role to manage banners and motd
 ## Supported operating systems
 
     * Debian (11)
+    * Raspbian (11)
     * RedHat (8)
     * Rocky (8)
 
